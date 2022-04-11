@@ -16,7 +16,7 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 
 
-with open("webhook_url.txt", "r") as file:
+with open("./resources/webhook_url.txt", "r") as file:
     WEBHOOK_URL = file.readline()
 
 TeamsMessageManager = pymsteams.connectorcard(WEBHOOK_URL)
@@ -281,7 +281,7 @@ if __name__ == '__main__':
         target_buy_count = 5  # 매수할 종목 수
         buy_percent = 0.19
 
-        with open("ticker_list.txt", "r") as file:
+        with open("./resources/ticker_list.txt", "r") as file:
             while line := file.readline():
                 symbol_list.append(str(line))
 

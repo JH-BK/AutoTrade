@@ -2,5 +2,6 @@ pandas
 pymsteams
 bs4
 selenium
-backtrader
-Investar
+pymysql
+matplotlib
+git+https://github.com/backtrader2/backtrader.git#egg=backtrader

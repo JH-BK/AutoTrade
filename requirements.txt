@@ -2,3 +2,5 @@ pandas
 pymsteams
 bs4
 selenium
+backtrader
+Investar

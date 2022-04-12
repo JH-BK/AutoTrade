@@ -13,7 +13,7 @@ os.system('wmic process where "name like \'%CpStart%\'" call terminate')
 os.system('wmic process where "name like \'%DibServer%\'" call terminate')
 time.sleep(5)
 
-with open("app_start_code.txt", "r") as file:
+with open("./resources/app_start_code.txt", "r") as file:
     app_start_code = file.readline()
 
 app = application.Application()

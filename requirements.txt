@@ -3,5 +3,6 @@ pymsteams
 bs4
 selenium
 pymysql
+pywinauto
 matplotlib
 git+https://github.com/backtrader2/backtrader.git#egg=backtrader

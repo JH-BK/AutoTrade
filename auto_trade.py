@@ -145,6 +145,16 @@ def get_current_cash():
     return cpCash.GetHeaderValue(9)  # 증거금 100% 주문 가능 금액
 
 
+def get_adaptive_kvalue(code):  # 인자로 받은 종목에 대한 20일 average noise ratio.
+    try:
+        ohlck = get_ohlc(code, 20)
+        ohlck['noiseratio'] = 1 - (abs(ohlck['open'] - ohlck['close']) / (ohlck['high'] - ohlck['low']))
+        return round(ohlck['noiseratio'].mean(), 2)
+    except Exception as ex:
+        print('get_kvalue() -> 에러: ' + str(ex))
+        return None
+
+
 def get_target_price(code):
     """매수 목표가를 반환한다."""
     try:
@@ -159,7 +169,13 @@ def get_target_price(code):
             today_open = lastday[3]
         lastday_high = lastday[1]
         lastday_low = lastday[2]
-        target_price = today_open + (lastday_high - lastday_low) * 0.3
+
+        # k_value = get_adaptive_kvalue(code)
+        # if k_value is None:
+        #     k_value = 0.5
+        k_value = 0.3
+
+        target_price = today_open + (lastday_high - lastday_low) * k_value
         return target_price
     except Exception as ex:
         dbgout("`get_target_price() -> exception! " + str(ex) + "`")

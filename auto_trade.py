@@ -240,7 +240,7 @@ def check_loss_and_sell_etf(code, loss: float = 0.005):
 
 
 def buy_etf(code):
-    """인자로 받은 종목을 최유리 지정가 FOK 조건으로 매수한다."""
+    """인자로 받은 종목을 시장가 FOK 조건으로 매수한다."""
     try:
         global bought_list      # 함수 내에서 값 변경을 하기 위해 global로 지정
         if code in bought_list:  # 매수 완료 종목이면 더 이상 안 사도록 함수 종료
@@ -269,9 +269,9 @@ def buy_etf(code):
             cpOrder.SetInputValue(2, accFlag[0])  # 상품구분 - 주식 상품 중 첫번째
             cpOrder.SetInputValue(3, code)       # 종목코드
             cpOrder.SetInputValue(4, buy_qty)    # 매수할 수량
+            cpOrder.SetInputValue(5, target_price)  # 주문단가
             cpOrder.SetInputValue(7, "2")        # 주문조건 0:기본, 1:IOC, 2:FOK
-            cpOrder.SetInputValue(8, "12")       # 주문호가 1:보통, 3:시장가
-            # 5:조건부, 12:최유리, 13:최우선
+            cpOrder.SetInputValue(8, "3")  # 주문호가 1:보통, 3:시장가, 5:지정가, 12:최유리, 13:최우선
             # 매수 주문 요청
             ret = cpOrder.BlockRequest()
             printlog('최유리 FoK 매수 ->', stock_name, code, buy_qty, '->', ret)
@@ -295,7 +295,7 @@ def buy_etf(code):
 
 
 def sell_all():
-    """보유한 모든 종목을 최유리 지정가 IOC 조건으로 매도한다."""
+    """보유한 모든 종목을 시장가 IOC 조건으로 매도한다."""
     try:
         cpTradeUtil.TradeInit()
         acc = cpTradeUtil.AccountNumber[0]       # 계좌번호
@@ -315,7 +315,7 @@ def sell_all():
                     cpOrder.SetInputValue(3, s['code'])   # 종목코드
                     cpOrder.SetInputValue(4, s['qty'])    # 매도수량
                     cpOrder.SetInputValue(7, "1")   # 조건 0:기본, 1:IOC, 2:FOK
-                    cpOrder.SetInputValue(8, "12")  # 호가 12:최유리, 13:최우선
+                    cpOrder.SetInputValue(8, "3")  # 주문호가 1:보통, 3:시장가, 5:지정가, 12:최유리, 13:최우선
                     # 최유리 IOC 매도 주문 요청
                     ret = cpOrder.BlockRequest()
                     printlog('최유리 IOC 매도', s['code'], s['name'], s['qty'],

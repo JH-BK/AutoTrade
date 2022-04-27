@@ -23,7 +23,7 @@ TeamsMessageManager = pymsteams.connectorcard(WEBHOOK_URL)
 
 
 def dbgout(message):
-    """인자로 받은 문자열을 파이썬 셸과 슬랙으로 동시에 출력한다."""
+    """인자로 받은 문자열을 파이썬 셸과 팀즈로 동시에 출력한다."""
     print(datetime.now().strftime('[%m/%d %H:%M:%S]'), message)
     strbuf = datetime.now().strftime('[%m/%d %H:%M:%S] ') + message
     TeamsMessageManager.text(strbuf)
@@ -271,7 +271,7 @@ def buy_etf(code):
             cpOrder.SetInputValue(4, buy_qty)    # 매수할 수량
             cpOrder.SetInputValue(5, target_price)  # 주문단가
             cpOrder.SetInputValue(7, "2")        # 주문조건 0:기본, 1:IOC, 2:FOK
-            cpOrder.SetInputValue(8, "5")  # 주문호가 1:보통, 3:시장가, 5:지정가, 12:최유리, 13:최우선
+            cpOrder.SetInputValue(8, "05")  # 주문호가 01:보통, 03:시장가, 05:지정가, 12:최유리, 13:최우선
             # 매수 주문 요청
             ret = cpOrder.BlockRequest()
             printlog('지정가 FoK 매수 ->', stock_name, code, buy_qty, '->', ret)

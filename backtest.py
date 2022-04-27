@@ -4,7 +4,8 @@ import datetime
 
 from data.data_tool import (
     check_creon_connection,
-    request_recent_n_day_data
+    request_recent_n_day_data,
+    check_code_is_etf,
 )
 from stats.moving_average import simple_moving_average
 from visualize.chart import draw_stock_chart
@@ -24,6 +25,7 @@ if __name__ == "__main__":
 
     # 지난 365일 종목 정보 불러오기
     data_history_dict = request_recent_n_day_data(STOCK_CODE, 200)
+    is_etf = check_code_is_etf(STOCK_CODE)
 
     fig, (plt_chart, plt_seed) = plt.subplots(2, 1, gridspec_kw={'height_ratios': [3, 1]})
     plt_chart = draw_stock_chart(ax=plt_chart, **data_history_dict)
@@ -62,10 +64,6 @@ if __name__ == "__main__":
         if (all(conditions)):
             buy_qty = np.floor(current_seed / buy_price).astype(int)
             current_seed -= np.ceil(buy_price * (1.0 + STOCK_FEE_RATIO)) * buy_qty
-            # print(
-            #     f"Bought {buy_qty}EA with price {buy_price}"
-            #     f" at {data_history_dict['date'][today_idx]}"
-            # )
 
             bought_date_idx_list.append(today_idx)
             bought_price_idx_list.append(buy_price)
@@ -74,19 +72,21 @@ if __name__ == "__main__":
             if USE_STOP_LOSS:
                 if today_close < buy_price * (1 - STOP_LOSS_RATIO):
                     sell_price = buy_price * (1 - STOP_LOSS_RATIO)
-                    # print(f"Stop loss at {data_history_dict['date'][today_idx]}")
                 else:
                     sell_price = today_close
-                # if today_high > buy_price * 1.05:
-                #     sell_price = buy_price * 1.05
             else:
                 sell_price = today_close
 
             if_profit = buy_price < sell_price
             is_profit_flag_list.append(if_profit)
 
+            if is_etf:
+                sell_fee_ratio = STOCK_FEE_RATIO
+            else:
+                sell_fee_ratio = STOCK_FEE_RATIO + STOCK_SELL_FEE_RATIO
+
             current_seed += np.floor(
-                sell_price * (1.0 - STOCK_FEE_RATIO - STOCK_SELL_FEE_RATIO)
+                sell_price * (1.0 - sell_fee_ratio)
             ) * buy_qty
 
         total_seed_list.append(current_seed)

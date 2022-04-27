@@ -94,3 +94,12 @@ def request_recent_n_day_data(code, n):
     data_history_dict = _preprocess_data_dict(data_history_dict, n)
 
     return data_history_dict
+
+
+def check_code_is_etf(code) -> bool:
+    """Check whether the given code belongs to ETF."""
+
+    instCpCodeMgr = win32com.client.Dispatch("CpUtil.CpCodeMgr")
+    section_kind = instCpCodeMgr.GetStockSectionKind(code)
+
+    return section_kind == 10
